@@ -6,3 +6,4 @@ build/
 libs/
 .idea/
 .venv/
+.vscode/
