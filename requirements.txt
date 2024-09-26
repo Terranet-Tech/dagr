@@ -1,0 +1,16 @@
+# Torch
+--index-url https://download.pytorch.org/whl/cu124
+torch
+torchvision
+torchaudio
+# Torch Geometric
+--index-url https://pypi.org/simple
+torch-geometric
+--find-links https://data.pyg.org/whl/torch-2.4.0+cu124.html
+pyg_lib
+torch_scatter
+torch_sparse
+torch_cluster
+torch_spline_conv
+# YoloX
+git+https://github.com/Megvii-BaseDetection/YOLOX.git#egg=yolox
