@@ -1,7 +1,7 @@
 import argparse
-import yaml
-
 from pathlib import Path
+
+import yaml
 
 
 def BASE_FLAGS():
@@ -60,9 +60,10 @@ def FLAGS():
     parser.add_argument('--no_eval', action="store_true")
     parser.add_argument('--tot_num_epochs', default=argparse.SUPPRESS, type=int)
 
-    parser.add_argument('--run_test', action="store_true")
+    parser.add_argument("--use_ema", action="store_true", help="Use EMA Model.")
 
     parser.add_argument('--num_interframe_steps', type=int, default=10)
+    parser.add_argument("--wnb_entity", default="", help="Wandb entity")
 
     args = parser.parse_args()
 

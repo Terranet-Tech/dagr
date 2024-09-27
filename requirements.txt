@@ -22,4 +22,3 @@ seaborn
 yolox
 dsec_det
 detectron2
--e .
