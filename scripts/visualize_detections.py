@@ -1,15 +1,37 @@
-import cv2
 import argparse
-
 from pathlib import Path
-import numpy as np
 
+import cv2
+import h5py
+import numpy as np
 from dsec_det.directory import DSECDirectory
-from dsec_det.io import extract_from_h5_by_timewindow, extract_image_by_index, load_start_and_end_time
-from dsec_det.preprocessing import compute_index
+from dsec_det.io import (
+    extract_from_h5_by_timewindow,
+)
 
 from dagr.visualization.bbox_viz import draw_bbox_on_img
 from dagr.visualization.event_viz import draw_events_on_image
+
+
+def extract_image_by_index(image_list, idx):
+    # use cv2 to read and return image
+    return cv2.imread(str(image_list[idx]))
+
+
+def load_start_and_end_time(dsec_directory):
+    with h5py.File(str(dsec_directory.events.event_file), "r") as h5f:
+        t_offset = h5f["t_offset"][()]
+        t = h5f["events/t"]
+        return t[0] + t_offset, t[-1] + t_offset
+
+
+def compute_index(detection_index, discrete_timestamps):
+    mapping = np.zeros_like(discrete_timestamps, dtype="uint64")
+    for i, t in enumerate(discrete_timestamps):
+        mapping[i] = np.searchsorted(detection_index, t, side="right") - 1
+        mapping[i] = max(mapping[i], 0)
+        mapping[i] = min(mapping[i], len(detection_index) - 1)
+    return mapping
 
 
 if __name__ == '__main__':
