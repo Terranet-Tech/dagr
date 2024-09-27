@@ -64,6 +64,9 @@ def FLAGS():
 
     parser.add_argument('--num_interframe_steps', type=int, default=10)
     parser.add_argument("--wnb_entity", default="", help="Wandb entity")
+    parser.add_argument(
+        "--log_every_n_batch", default=-1, type=int, help="Log every n batches"
+    )
 
     args = parser.parse_args()
 
