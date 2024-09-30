@@ -58,15 +58,13 @@ def FLAGS():
     parser.add_argument('--aug_zoom', default=argparse.SUPPRESS, type=float)
     parser.add_argument('--l_r', default=argparse.SUPPRESS, type=float)
     parser.add_argument('--no_eval', action="store_true")
-    parser.add_argument('--tot_num_epochs', default=argparse.SUPPRESS, type=int)
-
-    parser.add_argument("--use_ema", action="store_true", help="Use EMA Model.")
-
+    parser.add_argument("--tot_num_epochs", default=argparse.SUPPRESS, type=int)
     parser.add_argument('--num_interframe_steps', type=int, default=10)
     parser.add_argument("--wnb_entity", default="", help="Wandb entity")
     parser.add_argument(
         "--log_every_n_batch", default=-1, type=int, help="Log every n batches"
     )
+    parser.add_argument("--skip_lut", action="store_true")
 
     args = parser.parse_args()
 

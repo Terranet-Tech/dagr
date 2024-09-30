@@ -42,7 +42,14 @@ if __name__ == "__main__":
     print("init datasets")
     dataset_path = args.dataset_directory.parent / args.dataset
 
-    test_dataset = DSEC(args.dataset_directory, "test", Augmentations.transform_testing, debug=False, min_bbox_diag=15, min_bbox_height=10)
+    test_dataset = DSEC(
+        args.dataset_directory,
+        "test",
+        Augmentations.transform_testing,
+        debug=False,
+        min_bbox_diag=15,
+        min_bbox_height=10,
+    )
 
     num_iters_per_epoch = 1
 
@@ -56,9 +63,10 @@ if __name__ == "__main__":
 
     assert "checkpoint" in args
     checkpoint = torch.load(args.checkpoint)
-    if args.use_ema:
-        ema = ModelEMA(model)
-        ema.ema.load_state_dict(checkpoint["ema"])
+    ema = ModelEMA(model)
+    ema.ema.load_state_dict(checkpoint["ema"])
+
+    if not args.skip_lut:
         ema.ema.cache_luts(
             radius=args.radius, height=test_dataset.height, width=test_dataset.width
         )
@@ -66,8 +74,9 @@ if __name__ == "__main__":
     with torch.no_grad():
         metrics = run_test_with_visualization(
             test_loader,
-            model=model if not args.use_ema else ema.ema,
+            model=ema.ema,
             dataset=args.dataset,
+            log_every_n_batch=args.log_every_n_batch,
         )
         log_data = {f"testing/metric/{k}": v for k, v in metrics.items()}
         wandb.log(log_data)
