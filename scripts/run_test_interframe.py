@@ -91,9 +91,9 @@ if __name__ == "__main__":
 
     assert "checkpoint" in args
     checkpoint = torch.load(args.checkpoint)
-    if args.use_ema:
-        ema = ModelEMA(model)
-        ema.ema.load_state_dict(checkpoint["ema"])
+    ema = ModelEMA(model)
+    ema.ema.load_state_dict(checkpoint["ema"])
+    if not args.skip_lut:
         ema.ema.cache_luts(
             radius=args.radius, height=test_dataset.height, width=test_dataset.width
         )
@@ -104,7 +104,7 @@ if __name__ == "__main__":
             test_loader.dataset.set_num_us(int(n_us))
             metrics, detections_one_offset = run_test_with_visualization(
                 test_loader,
-                model=ema.ema if args.use_ema else model,
+                model=ema.ema,
                 dataset=args.dataset,
                 name=wandb.run.name,
                 compile_detections=True,
